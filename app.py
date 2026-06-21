@@ -1,81 +1,59 @@
-import random
-import streamlit as st
 #done
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
+# import random
+import streamlit as st
 
 
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
+from logic_utils import (
+    check_guess,
+    get_range_for_difficulty,
+    parse_guess,
+    update_score,
+)
 
 
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
 
 
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
+# ── Helpers ────────────────────────────────────────────────────────────────────
 
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
 
-    if outcome == "Too Low":
-        return current_score - 5
+def reset_game(difficulty: str):
+    lo, hi = get_range_for_difficulty(difficulty)
+    # FIX: AI identified that New Game never cleared `status`, so "You already
+    # won" persisted forever. Centralised all reset logic here so both first
+    # load and New Game behave identically. Collaborated via chat-mode prompting.
+    st.session_state.secret   = random.randint(lo, hi)
+    # FIX: AI spotted attempts was initialised to 1, silently burning the first
+    # guess before the player did anything. Reset to 0 here and in init below.
+    st.session_state.attempts = 0
+    st.session_state.score    = 0
+    st.session_state.status   = "playing"
+    st.session_state.history  = []
 
-    return current_score
+
+
+
+# ── Page config ────────────────────────────────────────────────────────────────
+
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
+
 
 st.title("🎮 Game Glitch Investigator")
 st.caption("An AI-generated guessing game. Something is off.")
 
+
+# ── Sidebar ────────────────────────────────────────────────────────────────────
+
+
 st.sidebar.header("Settings")
+
 
 difficulty = st.sidebar.selectbox(
     "Difficulty",
     ["Easy", "Normal", "Hard"],
     index=1,
 )
+
 
 attempt_limit_map = {
     "Easy": 6,
@@ -84,32 +62,36 @@ attempt_limit_map = {
 }
 attempt_limit = attempt_limit_map[difficulty]
 
+
 low, high = get_range_for_difficulty(difficulty)
+# FIX: Hard was returning 1–50 (easier than Normal's 1–100). I caught this
+# and asked AI to fix it; range corrected to 1–200 in logic_utils.py.
+
 
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
+
+# ── Session state init ─────────────────────────────────────────────────────────
+
+
 if "secret" not in st.session_state:
-    st.session_state.secret = random.randint(low, high)
+    reset_game(difficulty)
 
-if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
 
-if "score" not in st.session_state:
-    st.session_state.score = 0
+# ── Main UI ────────────────────────────────────────────────────────────────────
 
-if "status" not in st.session_state:
-    st.session_state.status = "playing"
-
-if "history" not in st.session_state:
-    st.session_state.history = []
 
 st.subheader("Make a guess")
 
+
+# FIX: Banner was hardcoded to "1 to 100" regardless of difficulty.
+# I asked AI to fix it. now uses {low}/{high} pulled from get_range_for_difficulty().
 st.info(
-    f"Guess a number between 1 and 100. "
+    f"Guess a number between {low} and {high}. "
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
+
 
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
@@ -118,10 +100,12 @@ with st.expander("Developer Debug Info"):
     st.write("Difficulty:", difficulty)
     st.write("History:", st.session_state.history)
 
+
 raw_guess = st.text_input(
     "Enter your guess:",
     key=f"guess_input_{difficulty}"
 )
+
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -131,11 +115,14 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+
+# FIX: Old New Game block was hardcoded to randint(1,100) and never reset
+# `status`. AI refactored this to call reset_game() instead.
 if new_game:
-    st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
+    reset_game(difficulty)
     st.success("New game started.")
     st.rerun()
+
 
 if st.session_state.status != "playing":
     if st.session_state.status == "won":
@@ -144,10 +131,10 @@ if st.session_state.status != "playing":
         st.error("Game over. Start a new game to try again.")
     st.stop()
 
-if submit:
-    st.session_state.attempts += 1
 
+if submit:
     ok, guess_int, err = parse_guess(raw_guess)
+
 
     if not ok:
         st.session_state.history.append(raw_guess)
@@ -155,21 +142,27 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
 
-        outcome, message = check_guess(guess_int, secret)
+        # FIX: Original code converted secret to str() on even attempts, causing
+        # lexicographic comparison bugs (e.g. "85" < "9"). I told AI that this is causing the issue and AI identified this as
+        # the root cause of random wrong hints. Removed entirely; secret stays
+        # int throughout. Logic extracted to logic_utils.py.
+        outcome, message = check_guess(guess_int, st.session_state.secret)
+
+
+        st.session_state.attempts += 1
+
 
         if show_hint:
             st.warning(message)
+
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
             outcome=outcome,
             attempt_number=st.session_state.attempts,
         )
+
 
         if outcome == "Win":
             st.balloons()
@@ -187,5 +180,7 @@ if submit:
                     f"Score: {st.session_state.score}"
                 )
 
+
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
+
