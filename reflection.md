@@ -1,9 +1,6 @@
 # 💭 Reflection: Game Glitch Investigator
 
 
-#done
-
-
 Answer each question in 3 to 5 sentences. Be specific and honest about what actually happened while you worked. This is about your process, not trying to sound perfect.
 
 
@@ -99,8 +96,4 @@ Using AI to find the edge cases that I missed and asking it follow up questions 
 I would break issues in peices and try to prompt it better next time as this time when I asked it to fix an issue in app.py it complete changed the layout of the website, so I had ot tell it to keep the layout same.
 
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
-
-
-
-
-
+In this project we did not just blindly use AI but made sure we understand what it was doing to our code, how it was changing it and why and we used it as an companion instead of just using AI we were involved in it to verfiy it does the job that it is supposed to do. This changed the way I think about AI generated code because I mostly thought that AI is not that great for coding at first as it sometimes make things worse if we just change the code it tell us to do, but this project taught me how to use AI more effectively and using it to help me.
