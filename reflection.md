@@ -81,6 +81,8 @@ Yes, I described the bugs in chat and the AI translated each one into a focused 
 
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+Every time a user interacts with a Streamlit app (clicks a button, changes a slider, types in a box), Streamlit runs the whole script again from top to bottom. This is called a rerun.
+Since the script keeps rerunning, normal variables get recreated each time. Session state is a special place to store data that should survive across reruns for a particular user session
 
 
 ---
@@ -91,7 +93,11 @@ Yes, I described the bugs in chat and the AI translated each one into a focused 
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+Using AI to find the edge cases that I missed and asking it follow up questions on what it changed and how it's code works.
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+I 
+
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
 
 
