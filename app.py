@@ -1,6 +1,6 @@
 import random
 import streamlit as st
-
+#done
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
         return 1, 20
