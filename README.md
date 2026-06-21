@@ -44,17 +44,17 @@ Glitchy Guesser is a number guessing game where the player tries to guess a secr
 2. String vs integer comparison - on even-numbered attempts, the secret was converted to a string, causing lexicographic comparisons where "85" < "9" would flip the result.
 3. Hard difficulty easier than Normal - Hard used range 1–50, which is a smaller target space than Normal's 1–100, making it easier despite fewer attempts.
 4. Attempts started at 1 - session state initialised attempts = 1, silently burning the first guess before the player did anything.
-5. New Game didn't reset status - after winning or losing, clicking New Game left status as "won" or "lost", so the game over screen persisted.
-6. Hardcoded range in UI - the info banner always displayed "1 to 100" regardless of the selected difficulty.
+5. New Game didn't reset status - after winning or losing, clicking New Game left status as "won" or "lost".
+6. UI - the info banner always displayed "1 to 100" regardless of the selected difficulty.
 
 
 - [ ] Explain what fixes you applied.
-1. Flipped the hint logic in check_guess() — guess > secret now correctly returns "Go LOWER!".
-2. Removed str(secret) conversion — secret stays an integer throughout, eliminating the lexicographic comparison bug entirely.
+1. Flipped the hint logic in check_guess(), guess > secret now correctly returns "Go LOWER!".
+2. Removed str(secret) conversion, secret stays an integer throughout.
 3. Corrected Hard range to 1–200 in get_range_for_difficulty().
 4. Reset attempts to 0 in the new centralised reset_game() function.
 5. reset_game() now clears status, so New Game always returns to a clean playing state.
-6. Info banner now uses {low} and {high} pulled dynamically from get_range_for_difficulty().
+6. Info banner now uses {low} and {high} pulled from get_range_for_difficulty().
 
 
 ## 📸 Demo Walkthrough
@@ -82,9 +82,40 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+
+============================= test session starts =============================
+platform win32 -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\anuja\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\anuja\ai110-module1show-gameglitchinvestigator-starter
+plugins: anyio-4.13.0
+collecting ... collected 23 items
+
+tests/test_game_logic.py::test_winning_guess PASSED                      [  4%]
+tests/test_game_logic.py::test_guess_too_high PASSED                     [  8%]
+tests/test_game_logic.py::test_guess_too_low PASSED                      [ 13%]
+tests/test_game_logic.py::test_too_high_hint_says_go_lower PASSED        [ 17%]
+tests/test_game_logic.py::test_too_low_hint_says_go_higher PASSED        [ 21%]
+tests/test_game_logic.py::test_numeric_compare_not_lexicographic PASSED  [ 26%]
+tests/test_game_logic.py::test_two_digit_vs_one_digit_low PASSED         [ 30%]
+tests/test_game_logic.py::test_hard_range_is_harder_than_normal PASSED   [ 34%]
+tests/test_game_logic.py::test_easy_range_is_narrowest PASSED            [ 39%]
+tests/test_game_logic.py::test_first_attempt_win_earns_full_points PASSED [ 43%]
+tests/test_game_logic.py::test_late_attempt_win_earns_minimum_points PASSED [ 47%]
+tests/test_game_logic.py::test_wrong_guess_deducts_points PASSED         [ 52%]
+tests/test_game_logic.py::test_parse_empty_string PASSED                 [ 56%]
+tests/test_game_logic.py::test_parse_none PASSED                         [ 60%]
+tests/test_game_logic.py::test_parse_non_numeric PASSED                  [ 65%]
+tests/test_game_logic.py::test_parse_float_string_truncates PASSED       [ 69%]
+tests/test_game_logic.py::test_parse_valid_integer PASSED                [ 73%]
+tests/test_game_logic.py::test_negative_number_parses PASSED             [ 78%]
+tests/test_game_logic.py::test_negative_number_returns_too_low PASSED    [ 82%]
+tests/test_game_logic.py::test_very_large_number_parses PASSED           [ 86%]
+tests/test_game_logic.py::test_very_large_number_returns_too_high PASSED [ 91%]
+tests/test_game_logic.py::test_whitespace_only_is_rejected PASSED        [ 95%]
+tests/test_game_logic.py::test_whitespace_around_number_parses PASSED    [100%]
+
+============================= 23 passed in 0.09s ==============================
+
 ```
 
 
