@@ -1,5 +1,4 @@
 # 🎮 Game Glitch Investigator: The Impossible Guesser
-#done
 
 
 ## 🚨 The Situation
@@ -83,38 +82,9 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 
 ```
 
-============================= test session starts =============================
-platform win32 -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\anuja\AppData\Local\Python\pythoncore-3.14-64\python.exe
-cachedir: .pytest_cache
-rootdir: C:\Users\anuja\ai110-module1show-gameglitchinvestigator-starter
-plugins: anyio-4.13.0
-collecting ... collected 23 items
-
-tests/test_game_logic.py::test_winning_guess PASSED                      [  4%]
-tests/test_game_logic.py::test_guess_too_high PASSED                     [  8%]
-tests/test_game_logic.py::test_guess_too_low PASSED                      [ 13%]
-tests/test_game_logic.py::test_too_high_hint_says_go_lower PASSED        [ 17%]
-tests/test_game_logic.py::test_too_low_hint_says_go_higher PASSED        [ 21%]
-tests/test_game_logic.py::test_numeric_compare_not_lexicographic PASSED  [ 26%]
-tests/test_game_logic.py::test_two_digit_vs_one_digit_low PASSED         [ 30%]
-tests/test_game_logic.py::test_hard_range_is_harder_than_normal PASSED   [ 34%]
-tests/test_game_logic.py::test_easy_range_is_narrowest PASSED            [ 39%]
-tests/test_game_logic.py::test_first_attempt_win_earns_full_points PASSED [ 43%]
-tests/test_game_logic.py::test_late_attempt_win_earns_minimum_points PASSED [ 47%]
-tests/test_game_logic.py::test_wrong_guess_deducts_points PASSED         [ 52%]
-tests/test_game_logic.py::test_parse_empty_string PASSED                 [ 56%]
-tests/test_game_logic.py::test_parse_none PASSED                         [ 60%]
-tests/test_game_logic.py::test_parse_non_numeric PASSED                  [ 65%]
-tests/test_game_logic.py::test_parse_float_string_truncates PASSED       [ 69%]
-tests/test_game_logic.py::test_parse_valid_integer PASSED                [ 73%]
-tests/test_game_logic.py::test_negative_number_parses PASSED             [ 78%]
-tests/test_game_logic.py::test_negative_number_returns_too_low PASSED    [ 82%]
-tests/test_game_logic.py::test_very_large_number_parses PASSED           [ 86%]
-tests/test_game_logic.py::test_very_large_number_returns_too_high PASSED [ 91%]
-tests/test_game_logic.py::test_whitespace_only_is_rejected PASSED        [ 95%]
-tests/test_game_logic.py::test_whitespace_around_number_parses PASSED    [100%]
-
-============================= 23 passed in 0.09s ==============================
+# Paste your pytest output here, e.g.:
+# pytest tests/
+# ========================= X passed in 0.XXs =========================
 
 ```
 
