@@ -9,8 +9,6 @@ def get_range_for_difficulty(difficulty: str):
     return 1, 100
 
 
-# done
-
 
 def parse_guess(raw: str):
     """

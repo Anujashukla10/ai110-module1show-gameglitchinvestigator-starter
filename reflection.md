@@ -96,7 +96,7 @@ Since the script keeps rerunning, normal variables get recreated each time. Sess
 Using AI to find the edge cases that I missed and asking it follow up questions on what it changed and how it's code works.
 
 - What is one thing you would do differently next time you work with AI on a coding task?
-I 
+I would break issues in peices and try to prompt it better next time as this time when I asked it to fix an issue in app.py it complete changed the layout of the website, so I had ot tell it to keep the layout same.
 
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
 
